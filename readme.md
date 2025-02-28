@@ -10,6 +10,7 @@
 
 ## Known Bug
 The Server config page got a rework. I broke the functionality doing this. Whoopsies. Please use Settings.xml in the main Server dir until I fix this issue. The SaveName on the Config Page still has to be specified for the backup system to work properly, and to be able to restore from Discord.
+OK Sorry guys I still haven't published the fix. I was working on it, I bet it is mostly finished but I didn't really need it and sadly did not finish. IF somebody wants to use this software - ping me, I will finish it for you!
 
 ## Introduction
 
