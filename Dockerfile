@@ -22,6 +22,9 @@ RUN echo "Running StationeersServerUI to build StationeersServerControl..." && .
 # Verify that the resulting executable exists
 RUN echo "Verifying the existence of StationeersServerControl executable:" && ls -l /app/StationeersServerControl* && echo "StationeersServerControl build successful."
 
+# Print the contents of the /app directory
+RUN echo "Contents of /app directory after build:" && ls -l /app
+
 # Use a minimal image to run the final application
 FROM debian:bullseye-slim AS runner
 
@@ -31,11 +34,11 @@ RUN echo "Installing required libraries..." && apt-get update && apt-get install
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the resulting executable from the builder stage
-COPY --from=builder /app/StationeersServerControl* /app/
+# Copy the resulting executable from the builder stage and rename it
+COPY --from=builder /app/StationeersServerControl* /app/StationeersServerControl
 
-# Verify that the executable was copied successfully
-RUN echo "Verifying the copied StationeersServerControl executable:" && ls -l /app/StationeersServerControl* && echo "StationeersServerControl copy successful."
+# Verify that the executable was copied and renamed successfully
+RUN echo "Verifying the copied and renamed StationeersServerControl executable:" && ls -l /app/StationeersServerControl && echo "StationeersServerControl copy and rename successful."
 
 # Copy the UIMod directory
 COPY --from=builder /app/UIMod /app/UIMod
