@@ -85,13 +85,13 @@ RUN echo "Verifying the copied and renamed StationeersServerControl executable:"
 # Copy the UIMod directory
 COPY --from=bootstrapper /app/UIMod /app/UIMod
 
-# Create a symbolic link from the SteamCMD error log to /dev/stderr
-RUN ln -sf /root/.local/share/Steam/logs/stderr.txt /dev/stderr
-
 # Expose the ports
 EXPOSE 8080 27016
 
 # Run the application and ensure proper handling of stdin, stdout, and stderr
 #CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /dev/stderr"]
-CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /root/.local/share/Steam/logs/stderr.txt"]
+#CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /root/.local/share/Steam/logs/stderr.txt"]
+# Run the application and redirect both stdout and stderr to a log file
+CMD ["sh", "-c", "/app/StationeersServerControl > /app/server.log 2>&1 & tail -f /app/server.log"]
+# bare naked exe run
 #CMD ["/app/StationeersServerControl"]
