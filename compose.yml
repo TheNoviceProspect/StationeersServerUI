@@ -1,8 +1,8 @@
 services:
   stationeers-server:
     container_name: stationeers-server
-    image: stationeers-server-ui:latest
     build: .
+    image: stationeers-server-ui:latest
     ports:
       - "8080:8080"
       - "27016:27016"

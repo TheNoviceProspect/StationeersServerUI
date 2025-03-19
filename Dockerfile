@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y lib32gcc-s1 && rm -rf /var/lib/apt/list
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the built application from the builder stage
+# Copy the resulting executable from the builder stage
 COPY --from=builder /app/StationeersServerControl* /app/
 
 # Copy the UIMod directory
