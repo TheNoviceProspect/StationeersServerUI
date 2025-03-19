@@ -17,7 +17,7 @@ COPY . .
 RUN echo "Building StationeersServerUI..." && go build -o StationeersServerUI ./build.go
 
 # Second stage: Bootstrap the server using a Debian slim image
-FROM debian:bullseye-slim AS bootstrapper
+FROM steamcmd/steamcmd AS bootstrapper
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -29,10 +29,10 @@ COPY --from=builder /app/StationeersServerUI /app/StationeersServerUI
 COPY --from=builder /app /app
 
 # Install required libraries
-RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
-    lib32gcc-s1 \
-    libc6 \
-    && rm -rf /var/lib/apt/lists/*
+#RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
+#    lib32gcc-s1 \
+#    libc6 \
+#    && rm -rf /var/lib/apt/lists/*
 
 # Run the initial executable to build StationeersServerControl
 RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
@@ -53,10 +53,10 @@ FROM steamcmd/steamcmd:latest AS runner
 WORKDIR /app
 
 # Install required libraries
-RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
-    lib32gcc-s1 \
-    libc6 \
-    && rm -rf /var/lib/apt/lists/*
+#RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
+#    lib32gcc-s1 \
+#    libc6 \
+#    && rm -rf /var/lib/apt/lists/*
 
 # Copy the resulting executable from the bootstrapper stage and rename it
 COPY --from=bootstrapper /app/StationeersServerControl* /app/StationeersServerControl
