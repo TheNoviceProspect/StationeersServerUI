@@ -1,4 +1,4 @@
-# Use the official Golang image to build the initial executable
+# First stage: Build the Go application using the Golang image
 FROM golang:1.22.1 AS builder
 
 # Set the working directory inside the container
@@ -16,6 +16,18 @@ COPY . .
 # Build the initial executable
 RUN echo "Building StationeersServerUI..." && go build -o StationeersServerUI ./build.go
 
+# Second stage: Bootstrap the server using a Debian slim image
+FROM debian:bullseye-slim AS bootstrapper
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the initial executable from the builder stage
+COPY --from=builder /app/StationeersServerUI /app/StationeersServerUI
+
+# Copy the rest of the application source code
+COPY --from=builder /app /app
+
 # Run the initial executable to build StationeersServerControl
 RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
 
@@ -28,20 +40,20 @@ RUN echo "Verifying the existence of StationeersServerControl executable:" && \
         exit 1; \
     fi
 
-# Print the contents of the /app directory
-RUN echo "Contents of /app directory after build:" && ls -l /app
-
-# Use a minimal image to run the final application
+# Third stage: Run the final application using the steamcmd/steamcmd image
 FROM steamcmd/steamcmd:latest AS runner
 
 # Install required libraries
-RUN echo "Installing required libraries..." && apt-get update && apt-get install -y lib32gcc-s1 && rm -rf /var/lib/apt/lists/*
+RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
+    lib32gcc-s1 \
+    libc6 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the resulting executable from the builder stage and rename it
-COPY --from=builder /app/StationeersServerControl* /app/StationeersServerControl
+# Copy the resulting executable from the bootstrapper stage and rename it
+COPY --from=bootstrapper /app/StationeersServerControl* /app/StationeersServerControl
 
 # Verify that the executable was copied and renamed successfully
 RUN echo "Verifying the copied and renamed StationeersServerControl executable:" && \
@@ -53,10 +65,10 @@ RUN echo "Verifying the copied and renamed StationeersServerControl executable:"
     fi
 
 # Copy the UIMod directory
-COPY --from=builder /app/UIMod /app/UIMod
+COPY --from=bootstrapper /app/UIMod /app/UIMod
 
 # Expose the ports
 EXPOSE 8080 27016
 
-# Run the application
-CMD ["/app/StationeersServerControl"]
+# Run the application and ensure proper handling of stdin, stdout, and stderr
+CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /dev/stderr"]
