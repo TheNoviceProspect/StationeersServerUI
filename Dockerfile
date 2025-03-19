@@ -43,6 +43,18 @@ RUN wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz 
     rm steamcmd_linux.tar.gz && \
     chmod +x steamcmd.sh
 
+# Run the initial executable to build StationeersServerControl
+RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
+
+# Verify that the resulting executable exists
+RUN echo "Verifying the existence of StationeersServerControl executable:" && \
+    if ls -l /app/StationeersServerControl*; then \
+        echo "StationeersServerControl build successful."; \
+    else \
+        echo "Error: StationeersServerControl executable not found."; \
+        exit 1; \
+    fi
+
 # Copy the UIMod directory
 COPY --from=builder /app/UIMod /app/UIMod
 
