@@ -19,6 +19,9 @@ RUN go build -o StationeersServerUI ./build.go
 # Run the initial executable to build StationeersServerControl
 RUN ./StationeersServerUI
 
+# Verify that the resulting executable exists
+RUN echo "Verifying the existence of StationeersServerControl executable:" && ls -l /app/StationeersServerControl*
+
 # Use a minimal image to run the final application
 FROM debian:bullseye-slim
 
