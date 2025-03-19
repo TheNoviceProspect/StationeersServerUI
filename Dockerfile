@@ -8,31 +8,34 @@ WORKDIR /app
 COPY go.mod go.sum ./
 
 # Download the dependencies
-RUN go mod download
+RUN echo "Downloading dependencies..." && go mod download
 
 # Copy the rest of the application source code
 COPY . .
 
 # Build the initial executable
-RUN go build -o StationeersServerUI ./build.go
+RUN echo "Building StationeersServerUI..." && go build -o StationeersServerUI ./build.go
 
 # Run the initial executable to build StationeersServerControl
-RUN ./StationeersServerUI
+RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
 
 # Verify that the resulting executable exists
-RUN echo "Verifying the existence of StationeersServerControl executable:" && ls -l /app/StationeersServerControl*
+RUN echo "Verifying the existence of StationeersServerControl executable:" && ls -l /app/StationeersServerControl* && echo "StationeersServerControl build successful."
 
 # Use a minimal image to run the final application
 FROM debian:bullseye-slim
 
 # Install required libraries
-RUN apt-get update && apt-get install -y lib32gcc-s1 && rm -rf /var/lib/apt/lists/*
+RUN echo "Installing required libraries..." && apt-get update && apt-get install -y lib32gcc-s1 && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Copy the resulting executable from the builder stage
 COPY --from=builder /app/StationeersServerControl* /app/
+
+# Verify that the executable was copied successfully
+RUN echo "Verifying the copied StationeersServerControl executable:" && ls -l /app/StationeersServerControl* && echo "StationeersServerControl copy successful."
 
 # Copy the UIMod directory
 COPY --from=builder /app/UIMod /app/UIMod
