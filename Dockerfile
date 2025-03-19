@@ -34,6 +34,9 @@ WORKDIR /app
 # Copy the resulting executable from the builder stage
 COPY --from=builder /app/StationeersServerControl* /app/
 
+# Verify that the executable was copied successfully
+RUN echo "Verifying the copied StationeersServerControl executable:" && ls -l /app/StationeersServerControl* && echo "StationeersServerControl copy successful."
+
 # Copy the UIMod directory
 COPY --from=builder /app/UIMod /app/UIMod
 
@@ -42,9 +45,3 @@ EXPOSE 8080 27016
 
 # Run the application
 CMD ["/app/StationeersServerControl"]
-
-# Final stage to print the contents of the /app directory
-FROM runner AS verifier
-
-# Print the contents of the /app directory
-RUN echo "Contents of /app directory:" && ls -l /app
