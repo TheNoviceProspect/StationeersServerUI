@@ -22,17 +22,26 @@ Additionally, it offers full Discord integration, enabling you and your communit
 
 ## Table of Contents
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [First-Time Setup](#first-time-setup)
-- [Discord Integration](#discord-integration)
-  - [Features](#discord-integration-features)
-  - [Setup Instructions](#discord-integration-setup)
-- [Usage](#usage)
-- [License](#license)
-- [Contributing](#contributing)
-- [Acknowledgments](#acknowledgments)
+- [Stationeers Dedicated Server Control v2.4.1](#stationeers-dedicated-server-control-v241)
+  - [Known Bug](#known-bug)
+  - [Introduction](#introduction)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Quick Installation Instructions](#quick-installation-instructions)
+  - [First-Time Setup](#first-time-setup)
+  - [Discord Integration](#discord-integration)
+    - [Discord Integration Features](#discord-integration-features)
+    - [Discord Notifications](#discord-notifications)
+  - [Discord Integration Setup](#discord-integration-setup)
+  - [Usage](#usage)
+    - [Web Interface](#web-interface)
+      - [Discord Commands](#discord-commands)
+    - [Important Notes](#important-notes)
+  - [License](#license)
+  - [Contributing](#contributing)
+  - [Acknowledgments](#acknowledgments)
 
 ## Features
 - Place Executable in an Empty folder and run it, Stationeers Server ready.
@@ -48,8 +57,9 @@ Additionally, it offers full Discord integration, enabling you and your communit
 
 ## Requirements
 
-- Windows OS (tested on Windows; Linux support coming soon).
+- Windows OS (tested on Windows; Linux support experimental).
 - Administrative privileges on the server machine.
+  - (Root/sudo access required to install steamcmd pre-requirements on linux)
 - An empty folder of your choice to install the server control software.
 
 ## Installation
@@ -196,7 +206,7 @@ The bot can send notifications for the following events:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](link-to-license-file) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
@@ -205,5 +215,7 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 ## Acknowledgments
 
 - **[JacksonTheMaster](https://github.com/JacksonTheMaster):** Developed with ❤️ and 💧 by J. Langisch.
-- **[Go](https://go.dev/):** For the Go programming language.
-- **[RocketWerkz](https://rocketwerkz.com/):** For creating the Stationeers game.
+- **[Sebastian - The Novice](https://github.com/TheNoviceProspect):** Additional code crafted with ✨ and 🛠️ by Sebastian (The Novice).
+- **[Visual Studio Code](https://code.visualstudio.com/):** Powered by ⚡ and 🖥️ by Microsoft, the silent hero behind the scenes.
+- **[Go](https://go.dev/):** Built with 🚀 and 🔧 by the Go programming language.
+- **[RocketWerkz](https://rocketwerkz.com/):** Inspired by 🌌 and 🎮 by the creators of Stationeers.
