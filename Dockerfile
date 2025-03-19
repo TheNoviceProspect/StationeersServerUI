@@ -17,10 +17,19 @@ COPY . .
 RUN echo "Building StationeersServerUI..." && go build -o StationeersServerUI ./build.go
 
 # Second stage: Bootstrap the server using a Debian slim image
-FROM steamcmd/steamcmd AS bootstrapper
+FROM golang:1.22.1 AS bootstrapper
 
 # Set the working directory inside the container
 WORKDIR /app
+
+# Install required libraries
+RUN apt-get update && apt-get install -y \
+    lib32gcc-s1 \
+    libc6 \
+    wget \
+    tar \
+    gzip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the initial executable from the builder stage
 COPY --from=builder /app/StationeersServerUI /app/StationeersServerUI
@@ -28,23 +37,14 @@ COPY --from=builder /app/StationeersServerUI /app/StationeersServerUI
 # Copy the rest of the application source code
 COPY --from=builder /app /app
 
-# Install required libraries
-#RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
-#    lib32gcc-s1 \
-#    libc6 \
-#    && rm -rf /var/lib/apt/lists/*
+# Download and install SteamCMD
+RUN wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz && \
+    tar -xvzf steamcmd_linux.tar.gz && \
+    rm steamcmd_linux.tar.gz && \
+    chmod +x steamcmd.sh
 
-# Run the initial executable to build StationeersServerControl
-RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
-
-# Verify that the resulting executable exists
-RUN echo "Verifying the existence of StationeersServerControl executable:" && \
-    if ls -l /app/StationeersServerControl*; then \
-        echo "StationeersServerControl build successful."; \
-    else \
-        echo "Error: StationeersServerControl executable not found."; \
-        exit 1; \
-    fi
+# Copy the UIMod directory
+COPY --from=builder /app/UIMod /app/UIMod
 
 # Third stage: Run the final application using the steamcmd/steamcmd image
 FROM steamcmd/steamcmd:latest AS runner
