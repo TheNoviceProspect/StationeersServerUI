@@ -28,6 +28,12 @@ COPY --from=builder /app/StationeersServerUI /app/StationeersServerUI
 # Copy the rest of the application source code
 COPY --from=builder /app /app
 
+# Install required libraries
+RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
+    lib32gcc-s1 \
+    libc6 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Run the initial executable to build StationeersServerControl
 RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
 
@@ -42,12 +48,6 @@ RUN echo "Verifying the existence of StationeersServerControl executable:" && \
 
 # Third stage: Run the final application using the steamcmd/steamcmd image
 FROM steamcmd/steamcmd:latest AS runner
-
-# Install required libraries
-RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
-    lib32gcc-s1 \
-    libc6 \
-    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container
 WORKDIR /app
