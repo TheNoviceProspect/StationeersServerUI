@@ -41,4 +41,4 @@ COPY --from=builder /app/UIMod /app/UIMod
 EXPOSE 8080 27016
 
 # Run the application
-CMD ["./StationeersServerControl"]
+CMD ["/app/StationeersServerControl"]
