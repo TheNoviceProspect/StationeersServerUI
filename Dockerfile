@@ -20,7 +20,13 @@ RUN echo "Building StationeersServerUI..." && go build -o StationeersServerUI ./
 RUN echo "Running StationeersServerUI to build StationeersServerControl..." && ./StationeersServerUI
 
 # Verify that the resulting executable exists
-RUN echo "Verifying the existence of StationeersServerControl executable:" && ls -l /app/StationeersServerControl* && echo "StationeersServerControl build successful."
+RUN echo "Verifying the existence of StationeersServerControl executable:" && \
+    if ls -l /app/StationeersServerControl*; then \
+        echo "StationeersServerControl build successful."; \
+    else \
+        echo "Error: StationeersServerControl executable not found."; \
+        exit 1; \
+    fi
 
 # Print the contents of the /app directory
 RUN echo "Contents of /app directory after build:" && ls -l /app
@@ -38,7 +44,13 @@ WORKDIR /app
 COPY --from=builder /app/StationeersServerControl* /app/StationeersServerControl
 
 # Verify that the executable was copied and renamed successfully
-RUN echo "Verifying the copied and renamed StationeersServerControl executable:" && ls -l /app/StationeersServerControl && echo "StationeersServerControl copy and rename successful."
+RUN echo "Verifying the copied and renamed StationeersServerControl executable:" && \
+    if ls -l /app/StationeersServerControl; then \
+        echo "StationeersServerControl copy and rename successful."; \
+    else \
+        echo "Error: StationeersServerControl executable not found after copy."; \
+        exit 1; \
+    fi
 
 # Copy the UIMod directory
 COPY --from=builder /app/UIMod /app/UIMod
