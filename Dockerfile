@@ -92,4 +92,5 @@ RUN ln -sf /root/.local/share/Steam/logs/stderr.txt /dev/stderr
 EXPOSE 8080 27016
 
 # Run the application and ensure proper handling of stdin, stdout, and stderr
-CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /dev/stderr"]
+#CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /dev/stderr"]
+CMD ["/app/StationeersServerControl"]
