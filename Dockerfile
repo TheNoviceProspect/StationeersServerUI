@@ -52,6 +52,12 @@ FROM steamcmd/steamcmd:latest AS runner
 # Set the working directory inside the container
 WORKDIR /app
 
+# Install required libraries
+RUN echo "Installing required libraries..." && apt-get update && apt-get install -y \
+    lib32gcc-s1 \
+    libc6 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy the resulting executable from the bootstrapper stage and rename it
 COPY --from=bootstrapper /app/StationeersServerControl* /app/StationeersServerControl
 
