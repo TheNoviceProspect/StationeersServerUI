@@ -32,7 +32,7 @@ RUN echo "Verifying the existence of StationeersServerControl executable:" && \
 RUN echo "Contents of /app directory after build:" && ls -l /app
 
 # Use a minimal image to run the final application
-FROM debian:bullseye-slim AS runner
+FROM steamcmd/steamcmd:latest AS runner
 
 # Install required libraries
 RUN echo "Installing required libraries..." && apt-get update && apt-get install -y lib32gcc-s1 && rm -rf /var/lib/apt/lists/*
