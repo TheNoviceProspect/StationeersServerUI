@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"runtime"
 	"strings"
 )
 
@@ -107,88 +108,88 @@ func getAdditionalParams(settings []string) string {
 
 // SaveConfig saves the updated configuration to the XML file
 func SaveConfig(w http.ResponseWriter, r *http.Request) {
-    if r.Method == http.MethodPost {
-        // Collect settings only if their values are not empty
-        var settings []string
+	if r.Method == http.MethodPost {
+		// Collect settings only if their values are not empty
+		var settings []string
 
-        if startLocalHost := r.FormValue("StartLocalHost"); startLocalHost != "" {
-            settings = append(settings, "StartLocalHost", startLocalHost)
-        }
-        if serverVisible := r.FormValue("ServerVisible"); serverVisible != "" {
-            settings = append(settings, "ServerVisible", serverVisible)
-        }
-        if gamePort := r.FormValue("GamePort"); gamePort != "" {
-            settings = append(settings, "GamePort", gamePort)
-        }
-        if updatePort := r.FormValue("UpdatePort"); updatePort != "" {
-            settings = append(settings, "UpdatePort", updatePort)
-        }
-        if autoSave := r.FormValue("AutoSave"); autoSave != "" {
-            settings = append(settings, "AutoSave", autoSave)
-        }
-        if saveInterval := r.FormValue("SaveInterval"); saveInterval != "" {
-            settings = append(settings, "SaveInterval", saveInterval)
-        }
-        if localIpAddress := r.FormValue("LocalIpAddress"); localIpAddress != "" {
-            settings = append(settings, "LocalIpAddress", localIpAddress)
-        }
-        if serverPassword := r.FormValue("ServerPassword"); serverPassword != "" {
-            settings = append(settings, "ServerPassword", serverPassword)
-        }
-        if adminPassword := r.FormValue("AdminPassword"); adminPassword != "" {
-            settings = append(settings, "AdminPassword", adminPassword)
-        }
-        if serverMaxPlayers := r.FormValue("ServerMaxPlayers"); serverMaxPlayers != "" {
-            settings = append(settings, "ServerMaxPlayers", serverMaxPlayers)
-        }
-        if serverName := r.FormValue("ServerName"); serverName != "" {
-            settings = append(settings, "ServerName", serverName)
-        }
+		if startLocalHost := r.FormValue("StartLocalHost"); startLocalHost != "" {
+			settings = append(settings, "StartLocalHost", startLocalHost)
+		}
+		if serverVisible := r.FormValue("ServerVisible"); serverVisible != "" {
+			settings = append(settings, "ServerVisible", serverVisible)
+		}
+		if gamePort := r.FormValue("GamePort"); gamePort != "" {
+			settings = append(settings, "GamePort", gamePort)
+		}
+		if updatePort := r.FormValue("UpdatePort"); updatePort != "" {
+			settings = append(settings, "UpdatePort", updatePort)
+		}
+		if autoSave := r.FormValue("AutoSave"); autoSave != "" {
+			settings = append(settings, "AutoSave", autoSave)
+		}
+		if saveInterval := r.FormValue("SaveInterval"); saveInterval != "" {
+			settings = append(settings, "SaveInterval", saveInterval)
+		}
+		if localIpAddress := r.FormValue("LocalIpAddress"); localIpAddress != "" {
+			settings = append(settings, "LocalIpAddress", localIpAddress)
+		}
+		if serverPassword := r.FormValue("ServerPassword"); serverPassword != "" {
+			settings = append(settings, "ServerPassword", serverPassword)
+		}
+		if adminPassword := r.FormValue("AdminPassword"); adminPassword != "" {
+			settings = append(settings, "AdminPassword", adminPassword)
+		}
+		if serverMaxPlayers := r.FormValue("ServerMaxPlayers"); serverMaxPlayers != "" {
+			settings = append(settings, "ServerMaxPlayers", serverMaxPlayers)
+		}
+		if serverName := r.FormValue("ServerName"); serverName != "" {
+			settings = append(settings, "ServerName", serverName)
+		}
 
-        // Append additional parameters if any
-        additionalParams := r.FormValue("AdditionalParams")
-        if additionalParams != "" {
-            settings = append(settings, strings.Split(additionalParams, " ")...)
-        }
+		// Append additional parameters if any
+		additionalParams := r.FormValue("AdditionalParams")
+		if additionalParams != "" {
+			settings = append(settings, strings.Split(additionalParams, " ")...)
+		}
 
-        settingsStr := strings.Join(settings, " ")
+		settingsStr := strings.Join(settings, " ")
 
-        // Determine the executable path based on the operating system
-        var exePath string
-        if runtime.GOOS == "windows" {
-            exePath = "./rocketstation_DedicatedServer.exe"
-        } else {
-            exePath = "./rocketstation_DedicatedServer"
-        }
+		// Determine the executable path based on the operating system
+		var exePath string
+		if runtime.GOOS == "windows" {
+			exePath = "./rocketstation_DedicatedServer.exe"
+		} else {
+			exePath = "./rocketstation_DedicatedServer.x86_64"
+		}
 
-        config := Config{
-            Server: struct {
-                ExePath  string `xml:"exePath"`
-                Settings string `xml:"settings"`
-            }{
-                ExePath:  exePath,
-                Settings: settingsStr,
-            },
-            SaveFileName: r.FormValue("saveFileName"),
-        }
+		config := Config{
+			Server: struct {
+				ExePath  string `xml:"exePath"`
+				Settings string `xml:"settings"`
+			}{
+				ExePath:  exePath,
+				Settings: settingsStr,
+			},
+			SaveFileName: r.FormValue("saveFileName"),
+		}
 
-        configPath := "./UIMod/config.xml"
-        file, err := os.Create(configPath)
-        if err != nil {
-            http.Error(w, fmt.Sprintf("Error creating config file: %v", err), http.StatusInternalServerError)
-            return
-        }
-        defer file.Close()
+		configPath := "./UIMod/config.xml"
+		file, err := os.Create(configPath)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error creating config file: %v", err), http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
 
-        encoder := xml.NewEncoder(file)
-        encoder.Indent("", "  ")
-        if err := encoder.Encode(config); err != nil {
-            http.Error(w, fmt.Sprintf("Error encoding config: %v", err), http.StatusInternalServerError)
-            return
-        }
+		encoder := xml.NewEncoder(file)
+		encoder.Indent("", "  ")
+		if err := encoder.Encode(config); err != nil {
+			http.Error(w, fmt.Sprintf("Error encoding config: %v", err), http.StatusInternalServerError)
+			return
+		}
 
-        http.Redirect(w, r, "/", http.StatusSeeOther)
-    } else {
-        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-    }
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
 }
