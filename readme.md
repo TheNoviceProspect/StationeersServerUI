@@ -42,10 +42,15 @@ Additionally, it offers full Discord integration, enabling you and your communit
     - [Web Interface](#web-interface)
       - [Discord Commands](#discord-commands)
   - [Running with Docker](#running-with-docker)
+<<<<<<< HEAD
+    - [Building the Docker Image](#building-the-docker-image)
+  - [Running with Docker Compose](#running-with-docker-compose)
+=======
     - [Building your own Docker Image  **\[RECOMMENDED\]**](#building-your-own-docker-image--recommended)
   - [Running with Docker Compose from your own image](#running-with-docker-compose-from-your-own-image)
   - [Using the Docker Image from GitHub Container Registry](#using-the-docker-image-from-github-container-registry)
   - [Using the Docker Image from GitHub Container Registry](#using-the-docker-image-from-github-container-registry-1)
+>>>>>>> 245f50255f6b9d5887f2b0b34c4781ea0a0fc7bd
   - [Important Security Note](#important-security-note)
   - [Important Notes](#important-notes)
   - [License](#license)
@@ -210,9 +215,15 @@ The bot can send notifications for the following events:
 
 ## Running with Docker
 
+<<<<<<< HEAD
+### Building the Docker Image
+
+To build the Docker image for the Stationeers Dedicated Server Control, follow these steps:
+=======
 ### Building your own Docker Image  **\[RECOMMENDED\]**
 
   To build the Docker image for the Stationeers Dedicated Server Control, follow these steps:
+>>>>>>> 245f50255f6b9d5887f2b0b34c4781ea0a0fc7bd
 
 1. **Clone the Repository**
 
@@ -225,6 +236,15 @@ The bot can send notifications for the following events:
 
   `docker build -t stationeers-server-ui:latest .`
 
+<<<<<<< HEAD
+## Running with Docker Compose
+
+To run the Stationeers Dedicated Server Control using Docker Compose, follow these steps:
+
+1. **Create a docker-compose.yml File**
+
+Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
+=======
 ## Running with Docker Compose from your own image
 
   To run the Stationeers Dedicated Server Control using Docker Compose, follow these steps:
@@ -232,6 +252,7 @@ The bot can send notifications for the following events:
 1. **Create a docker-compose.yml File**
 
   Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
+>>>>>>> 245f50255f6b9d5887f2b0b34c4781ea0a0fc7bd
 
 ```yaml
 services:
@@ -255,7 +276,11 @@ services:
 
   `docker compose up -d`
 
+<<<<<<< HEAD
+This command will start the Stationeers Dedicated Server Control in a Docker container.
+=======
   This command will start the Stationeers Dedicated Server Control in a Docker container.
+>>>>>>> 245f50255f6b9d5887f2b0b34c4781ea0a0fc7bd
 
 3. *(Optional)* **Check docker compose log**
 
@@ -265,6 +290,11 @@ services:
 
 4. **First-Time Setup**
 
+<<<<<<< HEAD
+From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
+
+Docker will mount this path into the container at runtime.
+=======
   From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
 
   Docker will mount this path into the container at runtime.
@@ -403,6 +433,7 @@ To use the Docker image created and published to the GitHub Container Registry, 
    ```
 
 This setup will ensure that Docker Compose uses the provided GitHub credentials to authenticate and pull the Docker image from the GitHub Container Registry.
+>>>>>>> 245f50255f6b9d5887f2b0b34c4781ea0a0fc7bd
 
 ## Important Security Note
 
