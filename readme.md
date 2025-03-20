@@ -3,6 +3,9 @@
 ![Go](https://img.shields.io/badge/Go-1.22.1-blue)
 ![License](https://img.shields.io/github/license/jacksonthemaster/StationeersServerUI)
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
+![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)
+![Docker](https://img.shields.io/badge/Docker-available-lightgrey)
+
 
 | UI Overview | Configuration | Backup Management |
 |:-----------:|:-------------:|:-----------------:|
@@ -22,17 +25,32 @@ Additionally, it offers full Discord integration, enabling you and your communit
 
 ## Table of Contents
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [First-Time Setup](#first-time-setup)
-- [Discord Integration](#discord-integration)
-  - [Features](#discord-integration-features)
-  - [Setup Instructions](#discord-integration-setup)
-- [Usage](#usage)
-- [License](#license)
-- [Contributing](#contributing)
-- [Acknowledgments](#acknowledgments)
+- [Stationeers Dedicated Server Control v2.4.1](#stationeers-dedicated-server-control-v241)
+  - [Known Bug](#known-bug)
+  - [Introduction](#introduction)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Quick Installation Instructions](#quick-installation-instructions)
+  - [First-Time Setup](#first-time-setup)
+  - [Discord Integration](#discord-integration)
+    - [Discord Integration Features](#discord-integration-features)
+    - [Discord Notifications](#discord-notifications)
+  - [Discord Integration Setup](#discord-integration-setup)
+  - [Usage](#usage)
+    - [Web Interface](#web-interface)
+      - [Discord Commands](#discord-commands)
+  - [Running with Docker](#running-with-docker)
+    - [Building your own Docker Image  **\[RECOMMENDED\]**](#building-your-own-docker-image--recommended)
+  - [Running with Docker Compose from your own image](#running-with-docker-compose-from-your-own-image)
+  - [Using the Docker Image from GitHub Container Registry](#using-the-docker-image-from-github-container-registry)
+  - [Using the Docker Image from GitHub Container Registry](#using-the-docker-image-from-github-container-registry-1)
+  - [Important Security Note](#important-security-note)
+  - [Important Notes](#important-notes)
+  - [License](#license)
+  - [Contributing](#contributing)
+  - [Acknowledgments](#acknowledgments)
 
 ## Features
 - Place Executable in an Empty folder and run it, Stationeers Server ready.
@@ -48,8 +66,9 @@ Additionally, it offers full Discord integration, enabling you and your communit
 
 ## Requirements
 
-- Windows OS (tested on Windows; Linux support coming soon).
+- Windows OS (tested on Windows; Linux support experimental).
 - Administrative privileges on the server machine.
+  - (Root/sudo access required to install steamcmd pre-requirements on linux)
 - An empty folder of your choice to install the server control software.
 
 ## Installation
@@ -189,14 +208,213 @@ The bot can send notifications for the following events:
 | `!update`                     | Updates the server files if a game update is available.             |
 | `!help`                       | Displays help information for the bot commands.                     |
 
-### Important Notes
+## Running with Docker
 
-- **Do Not Expose the UI Publicly:** For security reasons, do not expose the UI directly to the internet without proper authentication mechanisms.
+### Building your own Docker Image  **\[RECOMMENDED\]**
+
+  To build the Docker image for the Stationeers Dedicated Server Control, follow these steps:
+
+1. **Clone the Repository**
+
+   ```sh
+   git clone https://github.com/mitoskalandiel/StationeersServerUI.git
+   cd StationeersServerUI
+   ```
+
+2. **Build the Repository**
+
+  `docker build -t stationeers-server-ui:latest .`
+
+## Running with Docker Compose from your own image
+
+  To run the Stationeers Dedicated Server Control using Docker Compose, follow these steps:
+
+1. **Create a docker-compose.yml File**
+
+  Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
+
+```yaml
+services:
+  stationeers-server:
+    container_name: stationeers-server
+    build: .
+    image: stationeers-server-ui:latest
+    ports:
+      - "8080:8080" # Only do this if you've secured the connection, see addendum
+      - "27016:27016"
+    volumes:
+      - ./saves:/app/saves
+      - ./config:/app/config
+    environment:
+      - STEAMCMD_DIR=/app/steamcmd
+    restart: unless-stopped
+    command: ["/app/StationeersServerControl"]
+```
+
+2. **Run Docker Compose**
+
+  `docker compose up -d`
+
+  This command will start the Stationeers Dedicated Server Control in a Docker container.
+
+3. *(Optional)* **Check docker compose log**
+
+  `docker compose logs -f`
+
+**CTRL+C** to escape out of this "view"
+
+4. **First-Time Setup**
+
+  From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
+
+  Docker will mount this path into the container at runtime.
+
+## Using the Docker Image from GitHub Container Registry
+
+  To use the Docker image created and published to the GitHub Container Registry, follow these steps:
+
+1. **Clone the Repository**
+
+   ```sh
+   git clone https://github.com/mitoskalandiel/StationeersServerUI.git
+   cd StationeersServerUI
+   ```
+
+2. **Pull the Docker Image**
+
+  Pull the Docker image from the GitHub Container Registry:
+
+  `docker pull ghcr.io/mitoskalandiel/stationeers-server-ui:latest`
+
+3. **Run the Docker Container**
+
+  Run the Docker container using the pulled image:
+
+   ```sh
+   docker run -d \
+  --name stationeers-server \
+  -p 8080:8080 \
+  -p 27016:27016 \
+  -v $(pwd)/saves:/app/saves \
+  -v $(pwd)/config:/app/config \
+  -e STEAMCMD_DIR=/app/steamcmd \
+  ghcr.io/mitoskalandiel/stationeers-server-ui:latest
+  ```
+  This command will start the Stationeers Dedicated Server Control in a Docker container.
+
+4. **Using Docker Compose**
+
+Alternatively, you can use Docker Compose to run the container. Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
+  
+  ```yaml
+  services:
+  stationeers-server:
+    container_name: stationeers-server
+    image: ghcr.io/mitoskalandiel/stationeers-server-ui:latest
+    ports:
+      - "8080:8080" # Only do this if you've secured the connection, see addendum
+      - "27016:27016"
+    volumes:
+      - ./saves:/app/saves
+      - ./config:/app/config
+    environment:
+      - STEAMCMD_DIR=/app/steamcmd
+    restart: unless-stopped
+    command: ["/app/StationeersServerControl"]
+  ```
+
+5. **Run Docker Compose**
+  
+  `docker compose up -d`
+
+  This command will start the Stationeers Dedicated Server Control in a Docker container using Docker Compose.
+
+6. *(Optional)* **Check docker compose log**
+
+  `docker compose logs -f`
+
+**CTRL+C** to escape out of this "view"
+
+7. **First-Time Setup**
+
+  From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
+
+  Docker will mount this path into the container at runtime.
+
+## Using the Docker Image from GitHub Container Registry
+
+To use the Docker image created and published to the GitHub Container Registry, follow these steps:
+
+1. **Create a Personal Access Token (PAT)**:
+   - Go to your GitHub account settings.
+   - Navigate to **Developer settings** > **Personal access tokens**.
+   - Generate a new token with the `read:packages` scope.
+
+2. **Create a `.env` File**:
+   Create a `.env` file in the same directory as your `docker-compose.yml` file to store your GitHub username and personal access token.
+
+   ```env
+   GITHUB_USERNAME=your-github-username
+   GITHUB_TOKEN=your-personal-access-token
+   ```
+
+3. **Update Docker Compose File**:
+   Ensure your `docker-compose.yml` file includes the authentication section:
+
+   ```yaml
+   services:
+     stationeers-server:
+       container_name: stationeers-server
+       image: ghcr.io/thenoviceprospect/stationeers-server-ui:latest
+       ports:
+         - "8080:8080"
+         - "27016:27016"
+       volumes:
+         - ./saves:/app/saves
+         - ./config:/app/config
+       environment:
+         - STEAMCMD_DIR=/app/steamcmd
+       restart: unless-stopped
+       command: []
+       auth:
+         username: $GITHUB_USERNAME
+         password: $GITHUB_TOKEN
+   ```
+
+4. **Log in to the GitHub Container Registry**:
+   Use the Docker CLI to log in to the GitHub Container Registry with your GitHub username and the personal access token you created.
+
+   ```sh
+   docker login ghcr.io -u $GITHUB_USERNAME -p $GITHUB_TOKEN
+   ```
+
+5. **Pull the Docker Image**:
+   After logging in, you should be able to pull the Docker image without any issues.
+
+   ```sh
+   docker pull ghcr.io/thenoviceprospect/stationeers-server-ui:latest
+   ```
+
+6. **Run Docker Compose**:
+   Ensure you run Docker Compose with the environment variables loaded from the `.env` file.
+
+   ```sh
+   docker-compose --env-file .env up -d
+   ```
+
+This setup will ensure that Docker Compose uses the provided GitHub credentials to authenticate and pull the Docker image from the GitHub Container Registry.
+
+## Important Security Note
+
+For security reasons, do not expose the UI directly to the internet without proper authentication mechanisms. The `8080` port should only be exposed if secured at the very least through a reverse proxy with authentication and HTTPS termination before considering using this image, except for maybe private networks. Ensure that you have appropriate security measures in place to protect the server UI.
+
+## Important Notes
+
 - **Server Updates:** Currently, only the stable branch is supported for updates via Discord commands.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](link-to-license-file) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
@@ -205,5 +423,7 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 ## Acknowledgments
 
 - **[JacksonTheMaster](https://github.com/JacksonTheMaster):** Developed with ❤️ and 💧 by J. Langisch.
-- **[Go](https://go.dev/):** For the Go programming language.
-- **[RocketWerkz](https://rocketwerkz.com/):** For creating the Stationeers game.
+- **[Sebastian - The Novice](https://github.com/TheNoviceProspect):** Additional code and docker implementation crafted with ✨ and 🛠️ by Sebastian (The Novice).
+- **[Visual Studio Code](https://code.visualstudio.com/):** Powered by ⚡ and 🖥️ by Microsoft, the silent hero behind the scenes.
+- **[Go](https://go.dev/):** Built with 🚀 and 🔧 by the Go programming language.
+- **[RocketWerkz](https://rocketwerkz.com/):** Inspired by 🌌 and 🎮 by the creators of Stationeers.
