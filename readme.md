@@ -51,12 +51,6 @@ Additionally, it offers full Discord integration, enabling you and your communit
   - [License](#license)
   - [Contributing](#contributing)
   - [Acknowledgments](#acknowledgments)
->>>>>>> 245f50255f6b9d5887f2b0b34c4781ea0a0fc7bd
-  - [Important Security Note](#important-security-note)
-  - [Important Notes](#important-notes)
-  - [License](#license)
-  - [Contributing](#contributing)
-  - [Acknowledgments](#acknowledgments)
 
 ## Features
 - Place Executable in an Empty folder and run it, Stationeers Server ready.
