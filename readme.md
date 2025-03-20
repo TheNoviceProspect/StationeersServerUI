@@ -42,8 +42,9 @@ Additionally, it offers full Discord integration, enabling you and your communit
     - [Web Interface](#web-interface)
       - [Discord Commands](#discord-commands)
   - [Running with Docker](#running-with-docker)
-    - [Building the Docker Image](#building-the-docker-image)
-  - [Running with Docker Compose](#running-with-docker-compose)
+    - [Building your own Docker Image](#building-your-own-docker-image)
+  - [Running with Docker Compose from your own image](#running-with-docker-compose-from-your-own-image)
+  - [Using the Docker Image from GitHub Container Registry](#using-the-docker-image-from-github-container-registry)
   - [Important Security Note](#important-security-note)
   - [Important Notes](#important-notes)
   - [License](#license)
@@ -208,9 +209,9 @@ The bot can send notifications for the following events:
 
 ## Running with Docker
 
-### Building the Docker Image
+### Building your own Docker Image
 
-To build the Docker image for the Stationeers Dedicated Server Control, follow these steps:
+  To build the Docker image for the Stationeers Dedicated Server Control, follow these steps:
 
 1. **Clone the Repository**
 
@@ -223,13 +224,13 @@ To build the Docker image for the Stationeers Dedicated Server Control, follow t
 
   `docker build -t stationeers-server-ui:latest .`
 
-## Running with Docker Compose
+## Running with Docker Compose from your own image
 
-To run the Stationeers Dedicated Server Control using Docker Compose, follow these steps:
+  To run the Stationeers Dedicated Server Control using Docker Compose, follow these steps:
 
 1. **Create a docker-compose.yml File**
 
-Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
+  Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
 
 ```yaml
 services:
@@ -253,7 +254,7 @@ services:
 
   `docker compose up -d`
 
-This command will start the Stationeers Dedicated Server Control in a Docker container.
+  This command will start the Stationeers Dedicated Server Control in a Docker container.
 
 3. *(Optional)* **Check docker compose log**
 
@@ -263,9 +264,81 @@ This command will start the Stationeers Dedicated Server Control in a Docker con
 
 4. **First-Time Setup**
 
-From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
+  From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
 
-Docker will mount this path into the container at runtime.
+  Docker will mount this path into the container at runtime.
+
+## Using the Docker Image from GitHub Container Registry
+
+  To use the Docker image created and published to the GitHub Container Registry, follow these steps:
+
+1. **Clone the Repository**
+
+   ```sh
+   git clone https://github.com/mitoskalandiel/StationeersServerUI.git
+   cd StationeersServerUI
+   ```
+
+2. **Pull the Docker Image**
+
+  Pull the Docker image from the GitHub Container Registry:
+
+  `docker pull ghcr.io/mitoskalandiel/stationeers-server-ui:latest`
+
+3. **Run the Docker Container**
+
+  Run the Docker container using the pulled image:
+
+   ```sh
+   docker run -d \
+  --name stationeers-server \
+  -p 8080:8080 \
+  -p 27016:27016 \
+  -v $(pwd)/saves:/app/saves \
+  -v $(pwd)/config:/app/config \
+  -e STEAMCMD_DIR=/app/steamcmd \
+  ghcr.io/mitoskalandiel/stationeers-server-ui:latest
+  ```
+  This command will start the Stationeers Dedicated Server Control in a Docker container.
+
+4. **Using Docker Compose**
+
+Alternatively, you can use Docker Compose to run the container. Ensure you have a docker-compose.yml file in the root directory of the project with the following content:
+  
+  ```yaml
+  services:
+  stationeers-server:
+    container_name: stationeers-server
+    image: ghcr.io/mitoskalandiel/stationeers-server-ui:latest
+    ports:
+      - "8080:8080" # Only do this if you've secured the connection, see addendum
+      - "27016:27016"
+    volumes:
+      - ./saves:/app/saves
+      - ./config:/app/config
+    environment:
+      - STEAMCMD_DIR=/app/steamcmd
+    restart: unless-stopped
+    command: ["/app/StationeersServerControl"]
+  ```
+
+5. **Run Docker Compose**
+  
+  `docker compose up -d`
+
+  This command will start the Stationeers Dedicated Server Control in a Docker container using Docker Compose.
+
+6. *(Optional)* **Check docker compose log**
+
+  `docker compose logs -f`
+
+**CTRL+C** to escape out of this "view"
+
+7. **First-Time Setup**
+
+  From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
+
+  Docker will mount this path into the container at runtime.
 
 ## Important Security Note
 
