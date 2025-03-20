@@ -3,6 +3,9 @@
 ![Go](https://img.shields.io/badge/Go-1.22.1-blue)
 ![License](https://img.shields.io/github/license/jacksonthemaster/StationeersServerUI)
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
+![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)
+![Docker](https://img.shields.io/badge/Docker-available-lightgrey)
+
 
 | UI Overview | Configuration | Backup Management |
 |:-----------:|:-------------:|:-----------------:|
@@ -40,9 +43,9 @@ Additionally, it offers full Discord integration, enabling you and your communit
       - [Discord Commands](#discord-commands)
   - [Running with Docker](#running-with-docker)
     - [Building the Docker Image](#building-the-docker-image)
-    - [Running with Docker Compose](#running-with-docker-compose)
-    - [Important Security Note](#important-security-note)
-    - [Important Notes](#important-notes)
+  - [Running with Docker Compose](#running-with-docker-compose)
+  - [Important Security Note](#important-security-note)
+  - [Important Notes](#important-notes)
   - [License](#license)
   - [Contributing](#contributing)
   - [Acknowledgments](#acknowledgments)
@@ -212,7 +215,7 @@ To build the Docker image for the Stationeers Dedicated Server Control, follow t
 1. **Clone the Repository**
 
    ```sh
-   git clone https://github.com/JacksonTheMaster/StationeersServerUI.git
+   git clone https://github.com/mitoskalandiel/StationeersServerUI.git
    cd StationeersServerUI
    ```
 
@@ -220,7 +223,7 @@ To build the Docker image for the Stationeers Dedicated Server Control, follow t
 
   `docker build -t stationeers-server-ui:latest .`
 
-### Running with Docker Compose
+## Running with Docker Compose
 
 To run the Stationeers Dedicated Server Control using Docker Compose, follow these steps:
 
@@ -258,13 +261,18 @@ This command will start the Stationeers Dedicated Server Control in a Docker con
 
 **CTRL+C** to escape out of this "view"
 
-### Important Security Note
+4. **First-Time Setup**
 
-For security reasons, do not expose the UI directly to the internet without proper authentication mechanisms. The 8080 port should only be exposed if secured at the very least through a reverse proxy with authentication and HTTPS termination before considering using this image, except for maybe private networks. Ensure that you have appropriate security measures in place to protect the server UI.
+From here, simply follow the steps in the First-Time Setup section. Make sure your savegame obviously goes into whatever path was defined in `docker-compose.yml` (default: ./saves/)
 
-### Important Notes
+Docker will mount this path into the container at runtime.
 
-- **Do Not Expose the UI Publicly:** For security reasons, do not expose the UI directly to the internet without proper authentication mechanisms.
+## Important Security Note
+
+For security reasons, do not expose the UI directly to the internet without proper authentication mechanisms. The `8080` port should only be exposed if secured at the very least through a reverse proxy with authentication and HTTPS termination before considering using this image, except for maybe private networks. Ensure that you have appropriate security measures in place to protect the server UI.
+
+## Important Notes
+
 - **Server Updates:** Currently, only the stable branch is supported for updates via Discord commands.
 
 ## License
@@ -278,7 +286,7 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 ## Acknowledgments
 
 - **[JacksonTheMaster](https://github.com/JacksonTheMaster):** Developed with ❤️ and 💧 by J. Langisch.
-- **[Sebastian - The Novice](https://github.com/TheNoviceProspect):** Additional code crafted with ✨ and 🛠️ by Sebastian (The Novice).
+- **[Sebastian - The Novice](https://github.com/TheNoviceProspect):** Additional code and docker implementation crafted with ✨ and 🛠️ by Sebastian (The Novice).
 - **[Visual Studio Code](https://code.visualstudio.com/):** Powered by ⚡ and 🖥️ by Microsoft, the silent hero behind the scenes.
 - **[Go](https://go.dev/):** Built with 🚀 and 🔧 by the Go programming language.
 - **[RocketWerkz](https://rocketwerkz.com/):** Inspired by 🌌 and 🎮 by the creators of Stationeers.
