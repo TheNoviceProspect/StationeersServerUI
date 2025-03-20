@@ -92,6 +92,6 @@ EXPOSE 8080 27016
 #CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /dev/stderr"]
 #CMD ["sh", "-c", "/app/StationeersServerControl < /dev/stdin > /dev/stdout 2> /root/.local/share/Steam/logs/stderr.txt"]
 # Run the application and redirect both stdout and stderr to a log file
-CMD ["sh", "-c", "/app/StationeersServerControl > /app/server.log 2>&1 & tail -f /app/server.log"]
+#CMD ["sh", "-c", "/app/StationeersServerControl > /app/server.log 2>&1 & tail -f /app/server.log"]
 # bare naked exe run
-#CMD ["/app/StationeersServerControl"]
+CMD ["/app/StationeersServerControl"]
